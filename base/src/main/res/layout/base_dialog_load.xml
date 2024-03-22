@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="vm"
+            type="com.nsyw.base.widget.load.LoadViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:background="#A0000000"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:shape_solid_color="@{0xA0000000}"
+        app:shape_bg_radius="@{10f}">
+
+        <ImageView
+            android:id="@+id/iv_load"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/base_load_ing" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:gravity="center"
+            android:text="@{vm.loadText}"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            tools:text="加载中" />
+
+
+    </LinearLayout>
+</layout>

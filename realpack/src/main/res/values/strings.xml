@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">红包助手</string>
+    <string name="wx_service_desc">自动抢红包服务</string>
+</resources>
