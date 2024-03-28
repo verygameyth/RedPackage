@@ -14,15 +14,10 @@ class WechatNotificationListenerService : NotificationListenerService() {
     private val tag = WechatNotificationListenerService::class.java.simpleName
 
     override fun onListenerConnected() {
-        Runtime.IsNotificationConnected = true
-//        Runtime.IsNotificationPaused = false
         super.onListenerConnected()
-        Log.d(tag, "WechatNotificationListenerService Connected..")
     }
 
     override fun onListenerDisconnected() {
-        Runtime.IsNotificationConnected = false
-//        Runtime.IsNotificationPaused = true
         super.onListenerDisconnected()
         Log.d(tag, "WechatNotificationListenerService Disconnected..")
         requestRebind(ComponentName(this,NotificationListenerService::class.java))
@@ -36,12 +31,8 @@ class WechatNotificationListenerService : NotificationListenerService() {
         }
         val notification = sbn.notification ?: return
         var pendingIntent: PendingIntent? = null
-        // 当 API > 18 时，使用 extras 获取通知的详细信息
-        // 当 API > 18 时，使用 extras 获取通知的详细信息
         val extras = notification.extras
         if (extras != null) {
-            // 获取通知标题
-            val title = extras.getString(Notification.EXTRA_TITLE, "")
             // 获取通知内容
             val content = extras.getString(Notification.EXTRA_TEXT, "")
             if (!TextUtils.isEmpty(content) && content.contains("[微信红包]")) {
@@ -49,8 +40,6 @@ class WechatNotificationListenerService : NotificationListenerService() {
                 pendingIntent = notification.contentIntent
             }
         }
-        // 发送 pendingIntent 以此打开微信
-        // 发送 pendingIntent 以此打开微信
         try {
             pendingIntent?.send()
             Log.d(tag, "成功：打开红包")

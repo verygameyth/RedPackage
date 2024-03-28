@@ -68,6 +68,9 @@ class MainActivity : BaseActivity() {
         binding.lifecycleOwner = this
         binding.vm = vm
         binding.listener = listener
+        binding.cbBackHome.setOnCheckedChangeListener { buttonView, isChecked ->
+            com.nsyw.realpack.service.Runtime.backHome=isChecked
+        }
     }
 
 

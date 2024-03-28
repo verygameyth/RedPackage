@@ -1,30 +1,24 @@
 package com.nsyw.realpack.service
 
 object Config {
-    /////////////////////////////////////////////////////////////////////////
-    // 微信
-    /////////////////////////////////////////////////////////////////////////
+
     /** 微信包名 */
     const val WechatPackageName = "com.tencent.mm"
 
+    /////////////////////////////////////////////////////////////////////////
+    // 微信红包
+    /////////////////////////////////////////////////////////////////////////
+
     /** 点开红包弹窗类名 */
-    const val HongBaoReceiveClassName =
+    const val RedPackageReceiveClassName =
         "com.tencent.mm.plugin.luckymoney.ui.LuckyMoneyNotHookReceiveUI"
 
     /** 红包详情类名 */
-    const val HongBaoDetailClassName = "com.tencent.mm.plugin.luckymoney.ui.LuckyMoneyDetailUI"
+    const val RedPackageDetailClassName = "com.tencent.mm.plugin.luckymoney.ui.LuckyMoneyDetailUI"
 
     const val LuckyMoneyBeforeDetailUI =
         "com.tencent.mm.plugin.luckymoney.ui.LuckyMoneyBeforeDetailUI"
 
-    /** 红包父布局资源id */
-    const val HongBaoLayoutResId = "com.tencent.mm:id/bkg"
-
-    /** 左下角“微信红包”资源id */
-    const val HongBaoTextResId = "com.tencent.mm:id/a3y"
-
-    /** 中间的“已过期|以领取”资源id */
-    const val HongBaoExpiredResId = "com.tencent.mm:id/a3m"
 
     /** “开”图片按钮资源id */
     const val OpenButtonResId = "com.tencent.mm:id/j6g"
@@ -32,7 +26,17 @@ object Config {
     ///////////////////////////
     // 聊天详情页
     //////////////////////////
+    /** 聊天界面父布局id */
     const val ChatDetailPageLayoutResId = "com.tencent.mm:id/bks"
+
+    /** 红包父布局资源id */
+    const val RedPackageLayoutResId = "com.tencent.mm:id/bkg"
+
+    /** 左下角“微信红包”资源id */
+    const val RedPackageTextResId = "com.tencent.mm:id/a3y"
+
+    /** 中间的“已过期|以领取”资源id */
+    const val RedPackageExpiredResId = "com.tencent.mm:id/a3m"
 
     /////////////////////////
     // 首页聊天列表

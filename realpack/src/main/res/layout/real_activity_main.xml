@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -17,10 +17,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.MainActivity"
-        android:orientation="vertical"
         android:background="#FFFFFF"
-        android:gravity="center_horizontal">
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        tools:context=".ui.MainActivity">
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -49,89 +49,102 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:background="#eeeeee"
-                android:layout_gravity="bottom"/>
+                android:layout_gravity="bottom"
+                android:background="#eeeeee" />
 
         </FrameLayout>
 
 
-<!--        <LinearLayout-->
-<!--            app:shape_bg_radius="@{10}"-->
-<!--            app:shape_solid_color="@{0x00FFFFFF}"-->
-<!--            app:shape_stroke_width="@{1f}"-->
-<!--            app:shape_stroke_color="@{0xFFEEEEEE}"-->
-<!--            android:padding="12dp"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginTop="12dp"-->
-<!--            android:layout_marginStart="30dp"-->
-<!--            android:layout_marginEnd="30dp"-->
-<!--            android:gravity="center"-->
-<!--            android:orientation="vertical">-->
-
-<!--            <TextView-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                tools:text="通知监听权限：未开启"-->
-<!--                android:textSize="18sp"-->
-<!--                android:text="@{vm.notificationDesc}"/>-->
-
-<!--            <TextView-->
-<!--                app:shape_bg_radius="@{6f}"-->
-<!--                app:shape_solid_color="@{0xFF7ED321}"-->
-<!--                android:layout_width="60dp"-->
-<!--                android:layout_height="40dp"-->
-<!--                android:layout_marginTop="12dp"-->
-<!--                android:onClick="@{()->listener.onNotificationOpenBtnClick()}"-->
-<!--                android:text="@{vm.notificationBtnDesc}"-->
-<!--                android:gravity="center"-->
-<!--                android:textColor="#FFFFFF"/>-->
-
-<!--        </LinearLayout>-->
-
         <LinearLayout
-            app:shape_bg_radius="@{10f}"
-            app:shape_solid_color="@{0x00FFFFFF}"
-            app:shape_stroke_width="@{1f}"
-            app:shape_stroke_color="@{0xFFEEEEEE}"
-            android:padding="12dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
             android:layout_marginStart="30dp"
+            android:layout_marginTop="12dp"
             android:layout_marginEnd="30dp"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="12dp"
+            app:shape_bg_radius="@{10}"
+            app:shape_solid_color="@{0x00FFFFFF}"
+            app:shape_stroke_color="@{0xFFEEEEEE}"
+            app:shape_stroke_width="@{1f}">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="无障碍服务权限：未开启"
+                android:text="@{vm.notificationDesc}"
                 android:textSize="18sp"
-                android:text="@{vm.accessibilityDesc}"/>
+                tools:text="通知监听权限：未开启" />
 
             <TextView
-                app:shape_bg_radius="@{6f}"
-                app:shape_solid_color="@{0xFF7ED321}"
                 android:layout_width="60dp"
                 android:layout_height="40dp"
                 android:layout_marginTop="12dp"
+                android:gravity="center"
+                android:onClick="@{()->listener.onNotificationOpenBtnClick()}"
+                android:text="@{vm.notificationBtnDesc}"
+                android:textColor="#FFFFFF"
+                app:shape_bg_radius="@{6f}"
+                app:shape_solid_color="@{0xFF7ED321}" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="30dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="12dp"
+            app:shape_bg_radius="@{10f}"
+            app:shape_solid_color="@{0x00FFFFFF}"
+            app:shape_stroke_color="@{0xFFEEEEEE}"
+            app:shape_stroke_width="@{1f}">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{vm.accessibilityDesc}"
+                android:textSize="18sp"
+                tools:text="无障碍服务权限：未开启" />
+
+            <TextView
+                android:layout_width="60dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="12dp"
+                android:gravity="center"
                 android:onClick="@{()->listener.onAccessibilityOpenBtnClick()}"
                 android:text="@{vm.accessibilityBtnDesc}"
-                android:gravity="center"
-                android:textColor="#FFFFFF"/>
+                android:textColor="#FFFFFF"
+                app:shape_bg_radius="@{6f}"
+                app:shape_solid_color="@{0xFF7ED321}" />
 
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="12dp"
+            android:gravity="center">
+
+            <CheckBox
+                android:id="@+id/cb_back_home"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="是否自动退出聊天详情" />
         </LinearLayout>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="12dp"
-            android:textSize="14sp"
-            android:textColor="#999999"
             android:text="功能失效可通过以下方式尝试解决：
             \n1.点击上方绿色按钮重新开启无障碍服务
-            \n2.重启手机，重新打开无障碍服务"/>
+            \n2.重启手机，重新打开无障碍服务"
+            android:textColor="#999999"
+            android:textSize="14sp" />
 
     </LinearLayout>
 </layout>

@@ -1,3 +1,6 @@
+import java.io.InputStreamReader
+import java.io.BufferedReader
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -14,8 +17,8 @@ android {
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"
-
     }
+
 
     buildTypes {
         release {
@@ -24,8 +27,18 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            val process = Runtime.getRuntime().exec("git symbolic-ref --short -q HEAD")
+            val branch = process.text()
+            val apkName = "redPackage"
+            applicationVariants.all {
+                outputs.all {
+                    (this as com.android.build.gradle.internal.api.BaseVariantOutputImpl).outputFileName =
+                        "$apkName-${branch}.apk"
+                }
+            }
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -37,6 +50,22 @@ android {
     dataBinding {
         enable = true
     }
+}
+
+fun Process.text(): String {
+    // 输出 Shell 执行结果
+    val inputStream = this.inputStream
+    val insReader = InputStreamReader(inputStream)
+    val bufReader = BufferedReader(insReader)
+
+    var output = ""
+    var line: String? = ""
+    while (null != line) {
+        // 逐行读取shell输出，并保存到变量output
+        output += line
+        line = bufReader.readLine()
+    }
+    return output
 }
 
 dependencies {

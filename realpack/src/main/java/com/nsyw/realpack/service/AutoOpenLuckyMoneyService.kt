@@ -1,7 +1,6 @@
 package com.nsyw.realpack.service
 
 import android.accessibilityservice.AccessibilityService
-import android.app.Notification
 import android.graphics.PixelFormat
 import android.graphics.Rect
 import android.os.Build
@@ -28,6 +27,7 @@ class AutoOpenLuckyMoneyService : AccessibilityService() {
     /** 是正在开红包 */
     private var isOpening = false
 
+    /** 是否在查看红包 */
     private var isLooking = false
 
     override fun onServiceConnected() {
@@ -47,27 +47,27 @@ class AutoOpenLuckyMoneyService : AccessibilityService() {
     override fun onAccessibilityEvent(event: AccessibilityEvent) {
         Log.d(tag, "${event.className} : ${event.toString()}")
         when (event.eventType) {
-            AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED -> {
-                if (event.parcelableData != null && event.parcelableData is Notification && event.text.toString()
-                        .contains("[微信红包]")
-                ) {
-                    //收到微信红包通知
-                    Log.d(tag, "收到微信红包通知")
-                    val notifyData = event.parcelableData as Notification
-                    val notifyIntent = notifyData.contentIntent
-                    try {
-                        notifyIntent.send()
-                        Log.d(tag, "成功：打开红包通知")
-                    } catch (e: Exception) {
-                        Log.e(tag, "错误：${e.printStackTrace()}")
-                    }
-                }
-            }
+//            AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED -> {
+//                if (event.parcelableData != null && event.parcelableData is Notification && event.text.toString()
+//                        .contains("[微信红包]")
+//                ) {
+//                    //收到微信红包通知
+//                    Log.d(tag, "收到微信红包通知")
+//                    val notifyData = event.parcelableData as Notification
+//                    val notifyIntent = notifyData.contentIntent
+//                    try {
+//                        notifyIntent.send()
+//                        Log.d(tag, "成功：打开红包通知")
+//                    } catch (e: Exception) {
+//                        Log.e(tag, "错误：${e.printStackTrace()}")
+//                    }
+//                }
+//            }
 
             AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED -> {
-                if (!isOpening && event.className == Config.HongBaoReceiveClassName) {
+                if (!isOpening && event.className == Config.RedPackageReceiveClassName) {
                     Log.d(tag, "显示红包弹窗")
-                    isOpening = if (openHongbao(rootInActiveWindow ?: return)) {
+                    isOpening = if (openRedPackage(rootInActiveWindow ?: return)) {
                         //点击开按钮
                         Log.d(tag, "成功：打开红包")
                         true
@@ -77,7 +77,7 @@ class AutoOpenLuckyMoneyService : AccessibilityService() {
                         performGlobalAction(GLOBAL_ACTION_BACK)
                         false
                     }
-                } else if (isOpening && (event.className == Config.HongBaoDetailClassName || event.className == Config.LuckyMoneyBeforeDetailUI)) {
+                } else if (isOpening && (event.className == Config.RedPackageDetailClassName || event.className == Config.LuckyMoneyBeforeDetailUI)) {
                     Log.d(tag, "进入红包详情页")
                     performGlobalAction(GLOBAL_ACTION_BACK)
                     isOpening = false
@@ -93,7 +93,7 @@ class AutoOpenLuckyMoneyService : AccessibilityService() {
 
                     } else if (isChatDetailPage(rootInActiveWindow)) {
                         // 聊天详情
-                        if (!findAndClickHongbao(rootInActiveWindow)) {
+                        if (!findAndClickRedPackage(rootInActiveWindow) && Runtime.backHome) {
                             performGlobalAction(GLOBAL_ACTION_BACK)
                         }
                     }
@@ -102,7 +102,7 @@ class AutoOpenLuckyMoneyService : AccessibilityService() {
         }
     }
 
-    private fun openHongbao(nodeInfo: AccessibilityNodeInfo): Boolean {
+    private fun openRedPackage(nodeInfo: AccessibilityNodeInfo): Boolean {
         val nodes = nodeInfo.findAccessibilityNodeInfosByViewId(Config.OpenButtonResId)
         if (nodes.size == 0) return false
 
@@ -114,10 +114,10 @@ class AutoOpenLuckyMoneyService : AccessibilityService() {
         return true
     }
 
-    private fun findAndClickHongbao(nodeInfo: AccessibilityNodeInfo): Boolean {
+    private fun findAndClickRedPackage(nodeInfo: AccessibilityNodeInfo): Boolean {
 
         isLooking = true
-        val list = nodeInfo.findAccessibilityNodeInfosByViewId(Config.HongBaoLayoutResId)
+        val list = nodeInfo.findAccessibilityNodeInfosByViewId(Config.RedPackageLayoutResId)
         if (list.isNullOrEmpty()) {
             Log.e(tag, "聊天页面未找到红包")
             isLooking = false
@@ -131,12 +131,10 @@ class AutoOpenLuckyMoneyService : AccessibilityService() {
 
         for (i in list.size - 1 downTo 0) {
             val node = list[i]
-
             //根据左下角“微信红包”资源id过滤红包消息
-            if (node.findAccessibilityNodeInfosByViewId(Config.HongBaoTextResId).size == 0) continue
-
+            if (node.findAccessibilityNodeInfosByViewId(Config.RedPackageTextResId).size == 0) continue
             //过滤已领取|已过期
-            if (node.findAccessibilityNodeInfosByViewId(Config.HongBaoExpiredResId).size > 0) continue
+            if (node.findAccessibilityNodeInfosByViewId(Config.RedPackageExpiredResId).size > 0) continue
 
             if (!node.isClickable) continue
             Log.d(tag, "点击红包")
