@@ -1,11 +1,9 @@
 package com.nsyw.realpack.ui
 
 import android.Manifest
-import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.view.accessibility.AccessibilityManager
@@ -69,7 +67,7 @@ class MainActivity : BaseActivity() {
         binding.vm = vm
         binding.listener = listener
         binding.cbBackHome.setOnCheckedChangeListener { buttonView, isChecked ->
-            com.nsyw.realpack.service.Runtime.backHome=isChecked
+            com.nsyw.realpack.service.Runtime.backHome = isChecked
         }
     }
 

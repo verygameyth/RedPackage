@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.nsyw.base"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         minSdk = 24
@@ -43,4 +43,7 @@ dependencies {
     api("com.google.android.material:material:1.8.0")
     api("com.github.bumptech.glide:glide:4.16.0")
     api("com.google.code.gson:gson:2.10.1")
+    api("androidx.core:core-ktx:1.12.0")
+    api("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
+    api("androidx.lifecycle:lifecycle-common:2.7.0")
 }

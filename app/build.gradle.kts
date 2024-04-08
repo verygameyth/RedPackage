@@ -9,7 +9,7 @@ plugins {
 
 android {
     namespace = "com.nsyw.autoredpack"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.nsyw.autoredpack"

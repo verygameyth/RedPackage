@@ -44,7 +44,9 @@
                 android:paddingEnd="12dp"
                 android:text="使用指南"
                 android:textColor="#666666"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:visibility="gone"
+                tools:visibility="visible"/>
 
             <View
                 android:layout_width="match_parent"
