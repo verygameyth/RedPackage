@@ -52,6 +52,8 @@ object Config {
      */
     const val HomeRedPackageLayoutResId = "com.tencent.mm:id/cj1"
 
+    const val HomeRedPackageNewMessageResId = "com.tencent.mm:id/o_u"
+
     /**
      * 包含消息内容的控件id
      */

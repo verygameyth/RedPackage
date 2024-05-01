@@ -16,7 +16,7 @@ object Runtime {
 //    var IsPaused = false
 
     /** 已经授权辅助功能 */
-//    var IsNotificationConnected = false
+    var IsNotificationConnected = false
 
 //    /** 已暂停 */
 //    var IsNotificationPaused = false

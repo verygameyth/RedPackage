@@ -14,12 +14,13 @@ class WechatNotificationListenerService : NotificationListenerService() {
     private val tag = WechatNotificationListenerService::class.java.simpleName
 
     override fun onListenerConnected() {
+        Runtime.IsNotificationConnected=true
         super.onListenerConnected()
     }
 
     override fun onListenerDisconnected() {
         super.onListenerDisconnected()
-        Log.d(tag, "WechatNotificationListenerService Disconnected..")
+//        Log.d(tag, "WechatNotificationListenerService Disconnected..")
         requestRebind(ComponentName(this,NotificationListenerService::class.java))
     }
 

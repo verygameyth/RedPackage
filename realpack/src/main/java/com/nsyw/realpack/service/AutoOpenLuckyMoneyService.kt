@@ -1,6 +1,7 @@
 package com.nsyw.realpack.service
 
 import android.accessibilityservice.AccessibilityService
+import android.app.Notification
 import android.graphics.PixelFormat
 import android.graphics.Rect
 import android.os.Build
@@ -45,40 +46,23 @@ class AutoOpenLuckyMoneyService : AccessibilityService() {
     }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent) {
-        Log.d(tag, "${event.className} : ${event.toString()}")
+//        Log.d(tag, "${event.className} : ${event.toString()}")
         when (event.eventType) {
-//            AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED -> {
-//                if (event.parcelableData != null && event.parcelableData is Notification && event.text.toString()
-//                        .contains("[微信红包]")
-//                ) {
-//                    //收到微信红包通知
-//                    Log.d(tag, "收到微信红包通知")
-//                    val notifyData = event.parcelableData as Notification
-//                    val notifyIntent = notifyData.contentIntent
-//                    try {
-//                        notifyIntent.send()
-//                        Log.d(tag, "成功：打开红包通知")
-//                    } catch (e: Exception) {
-//                        Log.e(tag, "错误：${e.printStackTrace()}")
-//                    }
-//                }
-//            }
-
             AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED -> {
                 if (!isOpening && event.className == Config.RedPackageReceiveClassName) {
-                    Log.d(tag, "显示红包弹窗")
+//                    Log.d(tag, "显示红包弹窗")
                     isOpening = if (openRedPackage(rootInActiveWindow ?: return)) {
                         //点击开按钮
-                        Log.d(tag, "成功：打开红包")
+//                        Log.d(tag, "成功：打开红包")
                         true
                     } else {
                         //不能开 返回聊天界面
-                        Log.e(tag, "失败：打开失败")
+//                        Log.e(tag, "失败：打开失败")
                         performGlobalAction(GLOBAL_ACTION_BACK)
                         false
                     }
                 } else if (isOpening && (event.className == Config.RedPackageDetailClassName || event.className == Config.LuckyMoneyBeforeDetailUI)) {
-                    Log.d(tag, "进入红包详情页")
+//                    Log.d(tag, "进入红包详情页")
                     performGlobalAction(GLOBAL_ACTION_BACK)
                     isOpening = false
                 }
@@ -87,7 +71,7 @@ class AutoOpenLuckyMoneyService : AccessibilityService() {
 
             AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED -> {
                 if (!isLooking) {
-                    if (isChatListPage(rootInActiveWindow)) {
+                    if (isChatListPage(rootInActiveWindow ?: return)) {
                         // 聊天列表
                         findRedPackageInChatList(rootInActiveWindow)
 
@@ -119,25 +103,32 @@ class AutoOpenLuckyMoneyService : AccessibilityService() {
         isLooking = true
         val list = nodeInfo.findAccessibilityNodeInfosByViewId(Config.RedPackageLayoutResId)
         if (list.isNullOrEmpty()) {
-            Log.e(tag, "聊天页面未找到红包")
+//            Log.e(tag, "聊天页面未找到红包")
             isLooking = false
             return false
         } else {
-            Log.d(tag, "聊天页面找到红包")
+//            Log.d(tag, "聊天页面找到红包")
         }
 
         val rootRect = Rect()
         nodeInfo.getBoundsInScreen(rootRect)
+        val width = rootRect.width()
 
         for (i in list.size - 1 downTo 0) {
             val node = list[i]
+
             //根据左下角“微信红包”资源id过滤红包消息
             if (node.findAccessibilityNodeInfosByViewId(Config.RedPackageTextResId).size == 0) continue
             //过滤已领取|已过期
             if (node.findAccessibilityNodeInfosByViewId(Config.RedPackageExpiredResId).size > 0) continue
 
+            val rect = Rect()
+            node.getBoundsInScreen(rect)
+            //过滤自己发的,红包矩形位置离右边更近
+            if (rect.left > width - rect.right) continue
+
             if (!node.isClickable) continue
-            Log.d(tag, "点击红包")
+//            Log.d(tag, "点击红包")
             node.performAction(AccessibilityNodeInfo.ACTION_CLICK)
             isLooking = false
             return true
@@ -148,32 +139,32 @@ class AutoOpenLuckyMoneyService : AccessibilityService() {
 
     private fun findRedPackageInChatList(nodeInfo: AccessibilityNodeInfo): Boolean {
         isLooking = true
-        Log.d(tag, "聊天列表开始找红包...")
+//        Log.d(tag, "聊天列表开始找红包...")
         val list = nodeInfo.findAccessibilityNodeInfosByViewId(Config.HomeRedPackageLayoutResId)
         if (list.isNullOrEmpty()) {
-            Log.e(tag, "聊天列表暂无消息")
+//            Log.e(tag, "聊天列表暂无消息")
             isLooking = false
             return false
         }
-
-        val rootRect = Rect()
-        nodeInfo.getBoundsInScreen(rootRect)
 
         for (i in list.size - 1 downTo 0) {
             val node = list[i]
             val contentView = node.findAccessibilityNodeInfosByViewId(Config.HomeRedPackageResId)
             if (contentView.size == 0) continue
             contentView.forEach {
+                Log.e(tag, "${it.text}")
                 if (it.text.contains("[微信红包]")) {
-                    if (Runtime.NeedFilterSelf) {
-                        //红包矩形位置离右边更近
-                        if (it.text.indexOf("[微信红包]") == 0) return@forEach
-                    }
-
                     if (!node.isClickable) return@forEach
-                    node.performAction(AccessibilityNodeInfo.ACTION_CLICK)
-                    isLooking = false
-                    return true
+                    val newMessage =
+                        node.findAccessibilityNodeInfosByViewId(Config.HomeRedPackageNewMessageResId)
+                            .getOrNull(0)
+                    if (newMessage != null && newMessage.isVisibleToUser) {
+                        node.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+                        isLooking = false
+                        return true
+                    } else {
+                        return@forEach
+                    }
                 }
             }
         }
