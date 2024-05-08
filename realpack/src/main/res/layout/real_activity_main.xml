@@ -135,6 +135,7 @@
                 android:id="@+id/cb_back_home"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:checked="true"
                 android:text="是否自动退出聊天详情" />
         </LinearLayout>
 

@@ -7,7 +7,7 @@ object Runtime {
     /**
      * 是否退出聊天详情
      */
-    var backHome = false
+    var backHome = true
 
     /** 已经授权辅助功能 */
 //    var IsConnected = false

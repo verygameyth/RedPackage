@@ -1,7 +1,6 @@
 package com.nsyw.realpack.service
 
 import android.accessibilityservice.AccessibilityService
-import android.app.Notification
 import android.graphics.PixelFormat
 import android.graphics.Rect
 import android.os.Build
@@ -73,11 +72,14 @@ class AutoOpenLuckyMoneyService : AccessibilityService() {
                 if (!isLooking) {
                     if (isChatListPage(rootInActiveWindow ?: return)) {
                         // 聊天列表
-                        findRedPackageInChatList(rootInActiveWindow)
+                        findRedPackageInChatList(rootInActiveWindow ?: return)
 
-                    } else if (isChatDetailPage(rootInActiveWindow)) {
+                    } else if (isChatDetailPage(rootInActiveWindow ?: return)) {
                         // 聊天详情
-                        if (!findAndClickRedPackage(rootInActiveWindow) && Runtime.backHome) {
+                        if (!findAndClickRedPackage(
+                                rootInActiveWindow ?: return
+                            ) && Runtime.backHome
+                        ) {
                             performGlobalAction(GLOBAL_ACTION_BACK)
                         }
                     }
@@ -153,7 +155,8 @@ class AutoOpenLuckyMoneyService : AccessibilityService() {
             if (contentView.size == 0) continue
             contentView.forEach {
                 Log.e(tag, "${it.text}")
-                if (it.text.contains("[微信红包]")) {
+                val content = it.text.split(":").getOrNull(1)
+                if (content?.contains("[微信红包]") == true) {
                     if (!node.isClickable) return@forEach
                     val newMessage =
                         node.findAccessibilityNodeInfosByViewId(Config.HomeRedPackageNewMessageResId)
