@@ -45,7 +45,10 @@ class AutoOpenLuckyMoneyService : AccessibilityService() {
     }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent) {
-//        Log.d(tag, "${event.className} : ${event.toString()}")
+//        Log.d(
+//            tag,
+//            "isOpening:${isOpening}  eventType:${event.eventType}  className:${event.className}"
+//        )
         when (event.eventType) {
             AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED -> {
                 if (!isOpening && event.className == Config.RedPackageReceiveClassName) {
@@ -82,10 +85,27 @@ class AutoOpenLuckyMoneyService : AccessibilityService() {
                         ) {
                             performGlobalAction(GLOBAL_ACTION_BACK)
                         }
+                    } else if (isOpening && isRedPackageDialog(
+                            rootInActiveWindow ?: return
+                        ) && redPackageZero(
+                            rootInActiveWindow ?: return
+                        )
+                    ) {
+                        performGlobalAction(GLOBAL_ACTION_BACK)
+                        isOpening = false
                     }
                 }
             }
         }
+    }
+
+    private fun redPackageZero(nodeInfo: AccessibilityNodeInfo): Boolean {
+        val nodes = nodeInfo.findAccessibilityNodeInfosByViewId(Config.RedPackageZeroStrId)
+        if (nodes.size == 0) return false
+
+        val strId = nodes[0]
+        if (strId.text == "手慢了，红包派完了") return true
+        return false
     }
 
     private fun openRedPackage(nodeInfo: AccessibilityNodeInfo): Boolean {
@@ -154,7 +174,7 @@ class AutoOpenLuckyMoneyService : AccessibilityService() {
             val contentView = node.findAccessibilityNodeInfosByViewId(Config.HomeRedPackageResId)
             if (contentView.size == 0) continue
             contentView.forEach {
-                Log.e(tag, "${it.text}")
+//                Log.e(tag, "${it.text}")
                 val content = it.text.split(":").getOrNull(1)
                 if (content?.contains("[微信红包]") == true) {
                     if (!node.isClickable) return@forEach
@@ -208,6 +228,11 @@ class AutoOpenLuckyMoneyService : AccessibilityService() {
 
     private fun isChatDetailPage(rootNode: AccessibilityNodeInfo): Boolean {
         val nodeList = rootNode.findAccessibilityNodeInfosByViewId(Config.ChatDetailPageLayoutResId)
+        return !nodeList.isNullOrEmpty()
+    }
+
+    private fun isRedPackageDialog(rootNode: AccessibilityNodeInfo): Boolean {
+        val nodeList = rootNode.findAccessibilityNodeInfosByViewId(Config.RedPackageDialogResId)
         return !nodeList.isNullOrEmpty()
     }
 }
